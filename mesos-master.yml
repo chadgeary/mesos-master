@@ -1,0 +1,31 @@
+---
+- name: mesos-master
+  hosts: '{{ target }}'
+  gather_facts: yes
+  become: true
+  become_user: root
+  tasks:
+    - name: package updates
+      yum:
+        name: '*'
+        state: latest
+
+    - name: mesos package
+      package:
+        name: https://dl.bintray.com/apache/mesos/el7/x86_64/mesos-1.8.1-1.el7.x86_64.rpm
+        state: present
+
+    - name: mesos unit file
+      template:
+        src: mesos-master.service
+        dest: /etc/systemd/system/mesos-master.service
+        owner: root
+        group: wheel
+        mode: u=rw,g=r,o=r
+
+    - name: mesos systemd service
+      systemd:
+        state: started
+        enabled: yes
+        daemon_reload: yes
+        name: mesos-master

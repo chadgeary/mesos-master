@@ -1,0 +1,10 @@
+[Unit]
+Description=mesos-master
+After=network.target
+
+[Service]
+ExecStart=/usr/sbin/mesos-master --work_dir=/var/lib/mesos/master
+Type=simple
+
+[Install]
+WantedBy=multi-user.target
