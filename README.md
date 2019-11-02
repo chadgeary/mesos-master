@@ -1,5 +1,5 @@
 # Reference
-Installs the repository, software, and configurations, then starts the mesos agent service
+Downloads and unarchives software, configures systemd service, then starts the mesos master service.
 
 # Mesos
 https://mesos.apache.org
