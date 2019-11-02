@@ -3,7 +3,7 @@ Description=mesos-master
 After=network.target
 
 [Service]
-ExecStart=/opt/mesos/mesos.sh.in --work_dir=/var/lib/mesos/master
+ExecStart=/opt/mesos/bin/mesos.sh.in --work_dir=/var/lib/mesos/master
 Type=simple
 
 [Install]

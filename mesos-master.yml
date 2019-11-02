@@ -43,6 +43,14 @@
         owner: root
         group: root
 
+    - name: mesos work directory
+      file:
+        path: /var/lib/mesos/master
+        state: directory
+        mode: '0750'
+        owner: root
+        group: root
+
     - name: mesos unit file
       template:
         src: mesos-master.service
