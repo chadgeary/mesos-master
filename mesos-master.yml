@@ -10,10 +10,38 @@
         name: '*'
         state: latest
 
-    - name: mesos package
-      package:
-        name: https://dl.bintray.com/apache/mesos/el7/x86_64/mesos-1.8.1-1.el7.x86_64.rpm
-        state: present
+    - name: check mesos downloaded file
+      stat:
+        path: /opt/mesos-{{ mesos_version }}.tar.gz
+      register: mesos_downloaded
+
+    - name: download mesos when not downloaded
+      get_url:
+        url: http://www.apache.org/dist/mesos/{{ mesos_version }}/mesos-{{ mesos_version }}.tar.gz
+        dest: /opt/
+        mode: '0440'
+      when: mesos_downloaded.stat.exists == false
+
+    - name: check mesos unarchived file (README file)
+      stat:
+        path: /opt/mesos-{{ mesos_version }}/README.md
+      register: mesos_unarchived
+
+    - name: unarchive mesos when not unarchived
+      unarchive:
+        src: /opt/mesos-{{ mesos_version }}.tar.gz
+        dest: /opt
+        remote_src: yes
+      when: mesos_unarchived.stat.exists == false
+
+    - name: mesos version to /opt/mesos softlink
+      file:
+        src: /opt/mesos-{{_version }}
+        path: /opt/mesos
+        state: link
+        mode: '0755'
+        owner: root
+        group: root
 
     - name: mesos unit file
       template:
