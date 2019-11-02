@@ -5,10 +5,35 @@
   become: true
   become_user: root
   tasks:
-    - name: package updates
+    - name: epel
       yum:
-        name: '*'
+        name: 'epel-release'
         state: latest
+
+    - name: dev tools
+      yum:
+        name: "@Development tools"
+        state: latest
+
+    - name: required packages
+      yum:
+        name: "{{ packages }}"
+        state: latest
+      vars:
+        packages:
+        - maven
+        - python-devel
+        - python-six
+        - python-virtualenv
+        - java-1.8.0-openjdk-devel
+        - zlib-devel
+        - libcurl-devel
+        - openssl-devel
+        - cyrus-sasl-devel
+        - cyrus-sasl-md5
+        - apr-devel
+        - subversion-devel
+        - apr-util-devel
 
     - name: check mesos downloaded file
       stat:
@@ -42,6 +67,23 @@
         mode: '0755'
         owner: root
         group: root
+
+    - name: mesos build directory
+      file:
+        path: /opt/mesos/build
+        state: directory
+        mode: '0750'
+        owner: root
+        group: root
+
+    - name: build mesos when not built
+      shell: |
+        ../configure
+        make
+        make install
+      args:
+        chdir: /opt/mesos/build
+      when: mesos_unarchived.stat.exists == false
 
     - name: mesos work directory
       file:
