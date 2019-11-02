@@ -76,6 +76,11 @@
         owner: root
         group: root
 
+    - name: check mesos built (/build/bin/mesos-master.sh file)
+      stat:
+        path: /opt/mesos/build/bin/mesos-master.sh
+      register: mesos_built
+
     - name: build mesos when not built
       shell: |
         ../configure
@@ -83,7 +88,7 @@
         make install
       args:
         chdir: /opt/mesos/build
-      when: mesos_unarchived.stat.exists == false
+      when: mesos_built.stat.exists == false
 
     - name: mesos work directory
       file:
