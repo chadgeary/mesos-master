@@ -36,7 +36,7 @@
 
     - name: mesos version to /opt/mesos softlink
       file:
-        src: /opt/mesos-{{_version }}
+        src: /opt/mesos-{{ mesos_version }}
         path: /opt/mesos
         state: link
         mode: '0755'
